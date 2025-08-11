@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Media Manager</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f0f0f0;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    audio, video {
+      display: block;
+      margin-bottom: 20px;
+    }
+
+    #mediaPanel {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #1e1e1e;
+      color: #fff;
+      padding: 15px 20px;
+      border-radius: 10px;
+      font-size: 14px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      z-index: 9999;
+    }
+
+    #mediaPanel button {
+      margin-top: 10px;
+      margin-right: 5px;
+      padding: 5px 10px;
+      background: #3a3a3a;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #mediaPanel button:hover {
+      background: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎶 Media Manager</h1>
+
+  <!-- Example media elements -->
+  <audio id="myAudio" controls>
+    <source src="your-audio-file.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <video id="myVideo" width="320" height="240" controls>
+    <source src="your-video-file.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+
+  <!-- Media Panel -->
+  <div id="mediaPanel">
+    <div id="mediaStatus">No media playing</div>
+    <button id="playBtn">Play</button>
+    <button id="pauseBtn">Pause</button>
+  </div>
+
+  <script>
+    const status = document.getElementById('mediaStatus');
+    const playBtn = document.getElementById('playBtn');
+    const pauseBtn = document.getElementById('pauseBtn');
+
+    let currentMedia = null;
+
+    function updatePanel() {
+      const mediaElements = [...document.querySelectorAll('audio, video')];
+      const playing = mediaElements.find(el => !el.paused && !el.ended && el.readyState > 2);
+
+      if (playing) {
+        currentMedia = playing;
+        const type = playing.tagName.toLowerCase();
+        const src = playing.currentSrc || 'Unknown source';
+        status.textContent = `Now Playing: ${type} — ${src.split('/').pop()}`;
+      } else {
+        currentMedia = null;
+        status.textContent = 'No media playing';
+      }
+    }
+
+    playBtn.addEventListener('click', () => {
+      if (currentMedia) {
+        currentMedia.play();
+      }
+    });
+
+    pauseBtn.addEventListener('click', () => {
+      if (currentMedia) {
+        currentMedia.pause();
+      }
+    });
+
+    setInterval(updatePanel, 1000);
+  </script>
+
+</body>
+</html>
